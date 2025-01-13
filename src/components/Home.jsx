@@ -69,7 +69,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-3 bg-white/10 rounded-full px-6 py-3 transition-all duration-300 hover:bg-white/20">
               <Mail className="h-6 w-6 text-green-400" />
-              <span className="text-lg">websupport@justdial.com</span>
+              <span className="text-lg">ceo@smartitbox.in</span>
             </div>
           </div>
         </div>
