@@ -6,6 +6,7 @@ import ClientMasterTable from "./components/Clients/ClientMasterTable";
 import ItemMasterTable from "./components/Items Master/ItemMasterTable";
 import RMMasterTable from "./components/RM Items Master/RMMasterTable";
 import Layout from "./components/Layout/Layout"; // Import Layout component
+import LoginPage from "./components/Authentication/LoginPage";
 
 function App() {
   return (
@@ -13,14 +14,8 @@ function App() {
       <Router>
         {/* Define routes for different pages */}
         <Routes>
-          <Route
-            path="/"
-            element={
-              
-                <Home />
-              
-            }
-          />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route
             path="/users"
             element={

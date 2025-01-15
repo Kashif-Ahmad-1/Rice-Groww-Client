@@ -1,4 +1,5 @@
 import { ChevronRight, Phone, Mail, Star, Truck, Shield } from 'lucide-react';
+import logo from '../components/images/logo.png';
 
 export default function Home() {
   return (
@@ -26,43 +27,43 @@ export default function Home() {
       <div className="relative z-30 container mx-auto px-4 py-20 min-h-screen flex flex-col justify-center">
         <div className="max-w-3xl text-white space-y-8">
           {/* Logo Section */}
-          <div className="mb-16 relative">
-            <h2 className="text-4xl font-semibold text-green-400 mb-1">Smart ItBox</h2>
-            <p className="text-2xl text-gray-200">RICE TRADERS</p>
-            <div className="absolute -top-6 -left-6 w-16 h-16 border-2 border-green-400 rounded-full opacity-20" />
+          <div className="mb-16 relative flex justify-center">
+            {/* Logo Image */}
+            <img
+              src={logo}
+              alt="Smart ItBox Logo"
+              className="w-40 h-40 object-contain rounded-full border-4 border-green-400 shadow-lg"
+            />
           </div>
 
           {/* Main Content */}
-          <h1 className="text-7xl font-bold leading-tight">
+          <h1 className="text-7xl font-bold leading-tight text-center">
             Finest Quality Rice
             <span className="block text-5xl font-normal mt-4 text-gray-200">
               at Affordable Rate
             </span>
           </h1>
 
-          <p className="text-xl text-gray-200 max-w-2xl leading-relaxed">
+          <p className="text-xl text-gray-200 max-w-2xl leading-relaxed text-center mx-auto">
             Experience the perfect blend of tradition and quality with our premium selection of rice varieties. Direct from the finest farms to your table, ensuring unmatched freshness and flavor in every grain.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-6 pt-8">
-  <button
-    className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 text-lg rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
-  >
-    Enquire Now
-    {/* <ChevronRight className="ml-2 h-6 w-12" /> */}
-  </button>
-  <button
-    className="bg-white/10 hover:bg-white/20 border-white text-white px-8 py-2 text-lg rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
-  >
-    View Products
-  </button>
-</div>
-
-
+          <div className="flex flex-wrap gap-6 pt-8 justify-center">
+            <button
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 text-lg rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
+            >
+              Enquire Now
+            </button>
+            <button
+              className="bg-white/10 hover:bg-white/20 border-white text-white px-8 py-2 text-lg rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
+            >
+              View Products
+            </button>
+          </div>
 
           {/* Contact Information */}
-          <div className="pt-16 flex flex-col sm:flex-row gap-8 text-gray-200">
+          <div className="pt-16 flex flex-col sm:flex-row gap-8 justify-center text-gray-200">
             <div className="flex items-center gap-3 bg-white/10 rounded-full px-6 py-3 transition-all duration-300 hover:bg-white/20">
               <Phone className="h-6 w-6 text-green-400" />
               <span className="text-lg">+91-8888888888</span>
