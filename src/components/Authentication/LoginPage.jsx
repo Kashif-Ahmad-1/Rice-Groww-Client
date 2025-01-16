@@ -59,10 +59,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Side - Background Image */}
       <div
-        className="w-1/2 bg-cover bg-center"
+        className="w-full md:w-1/2 bg-cover bg-center"
         style={{
           backgroundImage:
             'url("https://plus.unsplash.com/premium_photo-1705338026411-00639520a438?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
@@ -72,9 +72,9 @@ const LoginPage = () => {
           {/* Optional: You can add a title here */}
         </div>
       </div>
-
+  
       {/* Right Side - Login Form */}
-      <div className="w-1/2 flex items-center justify-center bg-white">
+      <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-4 md:p-0">
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
           {/* Logo */}
           <div className="text-center mb-6">
@@ -86,7 +86,7 @@ const LoginPage = () => {
             <h2 className="text-2xl font-semibold text-gray-800 mt-2">Veer Overseas Ltd.</h2>
             <p className="text-gray-500 text-sm mb-6">Craft Something That Outlives You</p>
           </div>
-
+  
           {/* Login Form */}
           <form onSubmit={handleSubmit}>
             <div className="mb-6">
@@ -103,7 +103,7 @@ const LoginPage = () => {
                 required
               />
             </div>
-
+  
             <div className="mb-6">
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -118,13 +118,13 @@ const LoginPage = () => {
                 required
               />
             </div>
-
+  
             <div className="flex justify-between items-center mb-6">
               <a href="#" className="text-sm text-blue-500 hover:text-blue-700">
                 Forgot password?
               </a>
             </div>
-
+  
             {/* Login Button */}
             <button
               type="submit"
@@ -134,7 +134,7 @@ const LoginPage = () => {
               {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
-
+  
           {/* Sign Up Link */}
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
@@ -146,11 +146,13 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-
+  
       {/* Toast container for notifications */}
       <ToastContainer />
     </div>
   );
+  
+  
 };
 
 export default LoginPage;
