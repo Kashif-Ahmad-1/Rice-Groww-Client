@@ -33,12 +33,12 @@ const AddItemModal = ({ onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-2/3">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/2">
         <h3 className="text-xl font-semibold mb-4">Add New Items</h3>
         <form onSubmit={handleSubmit}>
           {items.map((item, index) => (
-            <div key={index} className="flex mb-4 space-x-4">
-              <div className="flex-1">
+            <div key={index} className="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+              <div className="flex-1 mb-2 sm:mb-0">
                 <label htmlFor={`productName-${index}`} className="block text-sm font-medium text-gray-700">
                   Product Name
                 </label>
@@ -51,8 +51,8 @@ const AddItemModal = ({ onClose, onSubmit }) => {
                   required
                 />
               </div>
-
-              <div className="flex-1">
+  
+              <div className="flex-1 mb-2 sm:mb-0">
                 <label htmlFor={`variety-${index}`} className="block text-sm font-medium text-gray-700">
                   Variety
                 </label>
@@ -65,8 +65,8 @@ const AddItemModal = ({ onClose, onSubmit }) => {
                   required
                 />
               </div>
-
-              <div className="flex-1">
+  
+              <div className="flex-1 mb-2 sm:mb-0">
                 <label htmlFor={`pack-${index}`} className="block text-sm font-medium text-gray-700">
                   Pack
                 </label>
@@ -81,7 +81,7 @@ const AddItemModal = ({ onClose, onSubmit }) => {
               </div>
             </div>
           ))}
-
+  
           {/* Add more items button */}
           <div className="flex justify-start mb-4">
             <button
@@ -93,7 +93,7 @@ const AddItemModal = ({ onClose, onSubmit }) => {
               Add More Items
             </button>
           </div>
-
+  
           {/* Modal footer */}
           <div className="flex justify-end space-x-4">
             <button
@@ -114,6 +114,7 @@ const AddItemModal = ({ onClose, onSubmit }) => {
       </div>
     </div>
   );
+  
 };
 
 export default AddItemModal;

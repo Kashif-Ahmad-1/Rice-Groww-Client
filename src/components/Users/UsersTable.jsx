@@ -1,53 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { HiOutlinePencil, HiOutlineTrash, HiPlus, HiMinus } from "react-icons/hi";
+import { HiOutlinePencil, HiOutlineTrash, HiPlus, HiMinus, HiEye } from "react-icons/hi"; // Import the eye icon
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddUserModal from "./AddUserModal";
+import ClientDetailsModal from "./ClientDetailsModal"; // Import the new modal
 import axios from "axios";
 import Swal from 'sweetalert2';
+
 const UsersTable = () => {
-  const [users, setUsers] = useState([]);  // Initialize users as an empty array
+  const [users, setUsers] = useState([]);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
-  const [expandedRow, setExpandedRow] = useState(null); // Track which row is expanded
-  const [loading, setLoading] = useState(false); // Loading state for API fetch
+  const [expandedRow, setExpandedRow] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [isClientDetailsModalOpen, setIsClientDetailsModalOpen] = useState(false); // For the client details modal
+  const [clientDetails, setClientDetails] = useState([]); // To store the client's assigned data
 
-  const token = localStorage.getItem('token'); // Replace with the actual token
+  const token = localStorage.getItem('token');
 
-// Define fetchUsers as a reusable function
-const fetchUsers = async (token, setUsers, setLoading) => {
-  setLoading(true); // Set loading state
-  try {
-    const response = await axios.get("https://veer-rice-backend.onrender.com/api/users/users", {
-      headers: {
-        Authorization: `Bearer ${token}`, // Set token in the Authorization header
-      },
-    });
-    setUsers(response.data); // Set users with the fetched data
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    toast.error("Failed to fetch users!");
-  } finally {
-    setLoading(false); // Set loading state to false
-  }
-};
+  // Fetch users function
+  const fetchUsers = async (token, setUsers, setLoading) => {
+    setLoading(true);
+    try {
+      const response = await axios.get("https://veer-rice-backend.onrender.com/api/users/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Failed to fetch users!");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-// Use the reusable function in your useEffect
-useEffect(() => {
-  
-  fetchUsers(token, setUsers, setLoading);
-}, [token]);
+  useEffect(() => {
+    fetchUsers(token, setUsers, setLoading);
+  }, [token]);
 
   const handleAddUser = () => {
-    setIsAddUserModalOpen(true); // Open Add User Modal
+    setIsAddUserModalOpen(true);
     fetchUsers(token, setUsers, setLoading);
   };
 
   const closeAddUserModal = () => {
-    setIsAddUserModalOpen(false); // Close Add User Modal
+    setIsAddUserModalOpen(false);
   };
 
   const handleDelete = async (id) => {
-    // Use SweetAlert for confirmation
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: 'You won’t be able to revert this!',
@@ -57,29 +58,39 @@ useEffect(() => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
     });
-  
+
     if (result.isConfirmed) {
       try {
-        setLoading(true); // Set loading state
+        setLoading(true);
         await axios.delete(`http://localhost:5000/api/users/delete-user/${id}`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         });
-        // If successful, update the users list
         setUsers(users.filter((user) => user._id !== id));
-        Swal.fire('Deleted!', 'The user has been deleted.', 'success'); // Success alert
+        Swal.fire('Deleted!', 'The user has been deleted.', 'success');
       } catch (error) {
         toast.error("Error deleting user:", error);
-        Swal.fire('Error!', 'Failed to delete user.', 'error'); // Error alert
+        Swal.fire('Error!', 'Failed to delete user.', 'error');
       } finally {
-        setLoading(false); // Reset loading state
+        setLoading(false);
       }
     }
   };
 
   const toggleExpandedRow = (id) => {
-    setExpandedRow(expandedRow === id ? null : id); // Toggle expanded state
+    setExpandedRow(expandedRow === id ? null : id);
+  };
+
+  // Handle the eye icon click to open the ClientDetailsModal
+  const handleViewClientDetails = (user) => {
+    // Dummy data for client details (replace with actual data from API)
+    const dummyClientData = [
+      { id: 1, name: "Client A", mobileNo: 935696866, address: "Lucknow" },
+      { id: 2, name: "Client B", mobileNo: 975986569, address: "Varanasi" },
+    ];
+    setClientDetails(dummyClientData); // Set dummy data
+    setIsClientDetailsModalOpen(true); // Open the modal
   };
 
   return (
@@ -106,7 +117,7 @@ useEffect(() => {
             <thead className="bg-darkRed text-white">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Role</th>
-                <th className="px-4 py-2 text-left text-xs font-semibold">UserName</th>
+                <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">UserName</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Name</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Mobile No</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Email Id</th>
@@ -122,13 +133,12 @@ useEffect(() => {
               ) : (
                 users.map((user) => (
                   <React.Fragment key={user._id}>
-                    {/* Main Row */}
                     <tr
                       className="hover:bg-gray-100 border-b border-gray-200 transition-colors duration-200 cursor-pointer"
-                      onClick={() => toggleExpandedRow(user._id)} // Toggle on row click
+                      onClick={() => toggleExpandedRow(user._id)}
                     >
                       <td className="px-4 py-2 text-sm text-gray-700">{user.role}</td>
-                      <td className="px-4 py-2 text-sm text-gray-700">{user.username}</td>
+                      <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{user.username}</td>
                       <td className="px-4 py-2 text-sm text-gray-700">{user.name}</td>
                       <td className="px-4 py-2 text-sm text-gray-700">{user.mobileNo}</td>
                       <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{user.email}</td>
@@ -148,10 +158,24 @@ useEffect(() => {
                         >
                           <HiOutlineTrash size={18} />
                         </button>
+
+                        {/* Eye Icon for Sales Executive */}
+                        {user.role === "sales executive" && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent row click from firing
+                              handleViewClientDetails(user);
+                            }}
+                            className="text-gray-500 hover:text-gray-700"
+                          >
+                            <HiEye size={18} />
+                          </button>
+                        )}
+
                         {/* Expand/Collapse Icon for Mobile */}
                         <button
                           onClick={(e) => {
-                            e.stopPropagation(); // Prevent row click from firing
+                            e.stopPropagation();
                             toggleExpandedRow(user._id);
                           }}
                           className="text-gray-500 hover:text-gray-700 sm:hidden"
@@ -161,12 +185,13 @@ useEffect(() => {
                       </td>
                     </tr>
 
-                    {/* Expanded Row for Mobile */}
                     {expandedRow === user._id && (
                       <tr className="bg-gray-100">
                         <td colSpan="6" className="px-4 py-2 text-sm text-gray-700">
-                          {/* Show expanded data */}
                           <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="sm:w-1/2">
+                              <strong>User Name</strong> {user.username}
+                            </div>
                             <div className="sm:w-1/2">
                               <strong>Email Id:</strong> {user.email}
                             </div>
@@ -183,29 +208,21 @@ useEffect(() => {
             </tbody>
           </table>
         </div>
-
-        {/* Pagination */}
-        <div className="mt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <span className="text-xs text-gray-500">
-            Showing 1 to {users.length} of {users.length} users
-          </span>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 focus:outline-none">
-              Prev
-            </button>
-            <button className="px-3 py-1 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 focus:outline-none">
-              Next
-            </button>
-          </div>
-        </div>
       </div>
 
-      {/* Toast Container for displaying toast messages */}
       <ToastContainer />
 
       {/* Add User Modal */}
       {isAddUserModalOpen && (
         <AddUserModal onClose={closeAddUserModal} onSubmit={() => fetchUsers(token, setUsers, setLoading)} />
+      )}
+
+      {/* Client Details Modal */}
+      {isClientDetailsModalOpen && (
+        <ClientDetailsModal
+          onClose={() => setIsClientDetailsModalOpen(false)}
+          clientDetails={clientDetails}
+        />
       )}
     </div>
   );

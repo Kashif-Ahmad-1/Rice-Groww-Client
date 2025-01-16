@@ -31,12 +31,12 @@ const AddRMModal = ({ onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-2/3">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2">
         <h3 className="text-xl font-semibold mb-4">Add Raw Materials</h3>
         <form onSubmit={handleSubmit}>
           {items.map((item, index) => (
-            <div key={index} className="flex mb-4 space-x-4">
-              <div className="flex-1">
+            <div key={index} className="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+              <div className="flex-1 mb-2 sm:mb-0">
                 <label className="block text-sm font-medium text-gray-700">Category</label>
                 <input
                   type="text"
@@ -47,7 +47,8 @@ const AddRMModal = ({ onClose, onSubmit }) => {
                   placeholder="Enter category"
                 />
               </div>
-              <div className="flex-1">
+  
+              <div className="flex-1 mb-2 sm:mb-0">
                 <label className="block text-sm font-medium text-gray-700">Name of Item</label>
                 <input
                   type="text"
@@ -58,7 +59,8 @@ const AddRMModal = ({ onClose, onSubmit }) => {
                   placeholder="Enter item name"
                 />
               </div>
-              <div className="flex-1">
+  
+              <div className="flex-1 mb-2 sm:mb-0">
                 <label className="block text-sm font-medium text-gray-700">Type</label>
                 <input
                   type="text"
@@ -71,7 +73,7 @@ const AddRMModal = ({ onClose, onSubmit }) => {
               </div>
             </div>
           ))}
-
+  
           {/* Add more items button */}
           <div className="flex justify-start mb-4">
             <button
@@ -83,7 +85,7 @@ const AddRMModal = ({ onClose, onSubmit }) => {
               Add More Items
             </button>
           </div>
-
+  
           {/* Modal footer */}
           <div className="flex justify-end space-x-4">
             <button
@@ -104,6 +106,7 @@ const AddRMModal = ({ onClose, onSubmit }) => {
       </div>
     </div>
   );
+  
 };
 
 export default AddRMModal;
