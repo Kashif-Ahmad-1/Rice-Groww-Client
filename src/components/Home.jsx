@@ -1,7 +1,9 @@
-import { ChevronRight, Phone, Mail, Star, Truck, Shield } from 'lucide-react';
-import logo from '../components/images/logo.png';
+import { ChevronRight, Phone, Mail, Star, Truck, Shield } from "lucide-react";
+import logo from "../components/images/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   return (
     <main className="min-h-screen relative overflow-hidden">
       {/* Background Image Section */}
@@ -9,8 +11,8 @@ export default function Home() {
         className="absolute inset-0 z-0"
         style={{
           backgroundImage: `url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BD8AC9173B7D49E813F8A58426_1622392046533.jpg-yBwD0pnGE4Yl3DwM09CGKnsssFk9Og.jpeg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       />
 
@@ -20,7 +22,7 @@ export default function Home() {
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-black/30 to-transparent z-20" />
       <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/30 to-transparent z-20" />
-      <div className="absolute top-10 left-10 w-20 h-20 border-t-2 border-l-2 border-white/20 z-20" />
+      {/* <div className="absolute top-10 left-10 w-20 h-20 border-t-2 border-l-2 border-white/20 z-20" /> */}
       <div className="absolute bottom-10 right-10 w-20 h-20 border-b-2 border-r-2 border-white/20 z-20" />
 
       {/* Content Section */}
@@ -32,40 +34,30 @@ export default function Home() {
             <img
               src={logo}
               alt="Smart ItBox Logo"
-              className="w-40 h-40 object-contain rounded-full border-4 border-green-400 shadow-lg"
+              className="w-40 h-40 object-contain rounded-full"
             />
           </div>
 
           {/* Main Content */}
-          <h1 className="text-7xl font-bold leading-tight text-center">
-            Finest Quality Rice
-            <span className="block text-5xl font-normal mt-4 text-gray-200">
-              at Affordable Rate
+          <h1 className="text-5xl font-bold leading-tight text-center">
+            Experiance Purity
+            <span className="block text-3xl font-normal mt-4 text-gray-200">
+              in every Grain
             </span>
           </h1>
 
-           {/* CTA Buttons */}
-           <div className="flex flex-wrap gap-6 pt-8 justify-center">
-            <button
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 text-lg rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
-            >
-              Enquire Now
-            </button>
-            <button
-              className="bg-white/10 hover:bg-white/20 border-white text-white px-8 py-2 text-lg rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
-            >
-              View Products
-            </button>
-          </div>
-
-          <p className="text-xl text-gray-200 max-w-2xl leading-relaxed text-center mx-auto">
-            Experience the perfect blend of tradition and quality with our premium selection of rice varieties. Direct from the finest farms to your table, ensuring unmatched freshness and flavor in every grain.
-          </p>
-
-         
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap gap-4 pt-2 justify-center">
+      <button
+        onClick={() => navigate("/login")} // Navigate to the login page
+        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 text-lg rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
+      >
+        Login
+      </button>
+    </div>
 
           {/* Contact Information */}
-          <div className="pt-16 flex flex-col sm:flex-row gap-8 justify-center text-gray-200">
+          <div className="pt-16 flex flex-col sm:flex-row gap-4 justify-center text-gray-200">
             <div className="flex items-center gap-3 bg-white/10 rounded-full px-6 py-3 transition-all duration-300 hover:bg-white/20">
               <Phone className="h-6 w-6 text-green-400" />
               <span className="text-lg">+91-8888888888</span>

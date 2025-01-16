@@ -1,16 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { HiMenu, HiX } from "react-icons/hi";
-
+import logo from "../images/logo.png"; 
 const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
   return (
     <header className="bg-gradient-to-r from-darkRed-600 to-darkRed-800 p-5 shadow-xl flex justify-between items-center w-full">
   {/* Logo */}
-  <div className="text-white font-extrabold text-3xl tracking-wider">
-    <Link to="/" className="hover:text-yellow-400 transition duration-300 ease-in-out">
-      Smart ItBox
-    </Link>
-  </div>
+  <div className="flex items-center gap-4 text-white font-extrabold text-2xl tracking-wider">
+  <img
+    src={logo}
+    alt="Veer Overseas Ltd."
+    className="w-12 h-12 object-contain rounded-full border-4 border-yellow-400 shadow-lg"
+  />
+  <Link
+    to="/"
+    className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg"
+  >
+    VEER OVERSEAS LTD.
+  </Link>
+</div>
+
 
   {/* Navbar Links (Desktop View) */}
   <nav className="hidden md:flex space-x-12 text-white">
