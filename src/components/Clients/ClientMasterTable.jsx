@@ -33,15 +33,8 @@ const ClientMasterTable = () => {
       location: "Chicago, USA",
       salesExeName: "Carol White",
     },
-    {
-      id: 4,
-      customerName: "Creative Solutions",
-      contactPerson: "Emily Clark",
-      mobileNo: "111-222-3333",
-      emailId: "emily.clark@creativesolutions.com",
-      location: "San Francisco, USA",
-      salesExeName: "David Green",
-    },
+
+    
   ]);
 
   const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
@@ -89,7 +82,7 @@ const ClientMasterTable = () => {
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Customer Name</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Contact Person</th>
-                <th className="px-4 py-2 text-left text-xs font-semibold">Mobile No</th>
+                <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Mobile No</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Email Id</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Location</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Sales Exe Name</th>
@@ -106,7 +99,7 @@ const ClientMasterTable = () => {
                   >
                     <td className="px-4 py-2 text-sm text-gray-700">{client.customerName}</td>
                     <td className="px-4 py-2 text-sm text-gray-700">{client.contactPerson}</td>
-                    <td className="px-4 py-2 text-sm text-gray-700">{client.mobileNo}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{client.mobileNo}</td>
                     <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{client.emailId}</td>
                     <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{client.location}</td>
                     <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{client.salesExeName}</td>
@@ -144,6 +137,9 @@ const ClientMasterTable = () => {
                       <td colSpan="7" className="px-4 py-2 text-sm text-gray-700">
                         {/* Show expanded data */}
                         <div className="flex flex-col sm:flex-row gap-4">
+                          <div className="sm:w-1/2">
+                            <strong>Mobile Number:</strong> {client.mobileNo}
+                          </div>
                           <div className="sm:w-1/2">
                             <strong>Email Id:</strong> {client.emailId}
                           </div>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { HiOutlinePencil, HiOutlineTrash, HiPlus, HiMinus, HiEye } from "react-icons/hi"; // Import the eye icon
+import { HiOutlinePencil, HiOutlineTrash, HiPlus, HiMinus, HiEye ,HiUsers} from "react-icons/hi"; // Import the eye icon
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddUserModal from "./AddUserModal";
 import ClientDetailsModal from "./ClientDetailsModal"; // Import the new modal
 import axios from "axios";
 import Swal from 'sweetalert2';
+import Footer from "../Layout/Footer";
 
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
@@ -94,6 +95,7 @@ const UsersTable = () => {
   };
 
   return (
+    
     <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
       <div className="p-4">
         {/* Search and Add User Section */}
@@ -110,7 +112,7 @@ const UsersTable = () => {
             Add User
           </button>
         </div>
-
+  
         {/* User Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto rounded-lg overflow-hidden shadow-md border-separate border-spacing-0">
@@ -119,7 +121,7 @@ const UsersTable = () => {
                 <th className="px-4 py-2 text-left text-xs font-semibold">Role</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">UserName</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Name</th>
-                <th className="px-4 py-2 text-left text-xs font-semibold">Mobile No</th>
+                <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Mobile No</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Email Id</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Location</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Actions</th>
@@ -140,10 +142,21 @@ const UsersTable = () => {
                       <td className="px-4 py-2 text-sm text-gray-700">{user.role}</td>
                       <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{user.username}</td>
                       <td className="px-4 py-2 text-sm text-gray-700">{user.name}</td>
-                      <td className="px-4 py-2 text-sm text-gray-700">{user.mobileNo}</td>
+                      <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{user.mobileNo}</td>
                       <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{user.email}</td>
                       <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{user.location}</td>
                       <td className="px-4 py-2 text-sm flex space-x-3 items-center">
+                         {/* Expand/Collapse Icon for Mobile */}
+                         <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleExpandedRow(user._id);
+                          }}
+                          className="text-gray-500 hover:text-gray-700 sm:hidden"
+                        >
+                          {expandedRow === user._id ? <HiMinus size={18} /> : <HiPlus size={18} />}
+                        </button>
+
                         {/* Edit Button */}
                         <button className="text-blue-500 hover:text-blue-700">
                           <HiOutlinePencil size={18} />
@@ -158,7 +171,7 @@ const UsersTable = () => {
                         >
                           <HiOutlineTrash size={18} />
                         </button>
-
+  
                         {/* Eye Icon for Sales Executive */}
                         {user.role === "sales executive" && (
                           <button
@@ -166,31 +179,25 @@ const UsersTable = () => {
                               e.stopPropagation(); // Prevent row click from firing
                               handleViewClientDetails(user);
                             }}
-                            className="text-gray-500 hover:text-gray-700"
+                            className="text-blue-500 hover:text-blue-700"
                           >
-                            <HiEye size={18} />
+                            <HiUsers size={18} />
                           </button>
                         )}
-
-                        {/* Expand/Collapse Icon for Mobile */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleExpandedRow(user._id);
-                          }}
-                          className="text-gray-500 hover:text-gray-700 sm:hidden"
-                        >
-                          {expandedRow === user._id ? <HiMinus size={18} /> : <HiPlus size={18} />}
-                        </button>
+  
+                       
                       </td>
                     </tr>
-
+  
                     {expandedRow === user._id && (
                       <tr className="bg-gray-100">
                         <td colSpan="6" className="px-4 py-2 text-sm text-gray-700">
                           <div className="flex flex-col sm:flex-row gap-4">
                             <div className="sm:w-1/2">
                               <strong>User Name</strong> {user.username}
+                            </div>
+                            <div className="sm:w-1/2">
+                              <strong>Mobile Number</strong> {user.mobileNo}
                             </div>
                             <div className="sm:w-1/2">
                               <strong>Email Id:</strong> {user.email}
@@ -209,14 +216,14 @@ const UsersTable = () => {
           </table>
         </div>
       </div>
-
+  
       <ToastContainer />
-
+  
       {/* Add User Modal */}
       {isAddUserModalOpen && (
         <AddUserModal onClose={closeAddUserModal} onSubmit={() => fetchUsers(token, setUsers, setLoading)} />
       )}
-
+  
       {/* Client Details Modal */}
       {isClientDetailsModalOpen && (
         <ClientDetailsModal
@@ -224,8 +231,12 @@ const UsersTable = () => {
           clientDetails={clientDetails}
         />
       )}
+
+      
     </div>
   );
+  
+
 };
 
 export default UsersTable;
