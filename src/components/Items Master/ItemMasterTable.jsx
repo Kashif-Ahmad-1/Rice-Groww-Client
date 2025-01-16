@@ -59,7 +59,7 @@ const ItemMasterTable = () => {
           />
           <button
             onClick={handleAddItem}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            className="px-4 py-2 bg-darkRed text-white rounded-md hover:bg-darkRedDark focus:outline-none focus:ring-2 focus:ring-darkRed w-full sm:w-auto"
           >
             Add Item
           </button>
@@ -68,7 +68,7 @@ const ItemMasterTable = () => {
         {/* Item Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto rounded-lg overflow-hidden shadow-md border-separate border-spacing-0">
-            <thead className="bg-blue-600 text-white">
+            <thead className="bg-darkRed text-white">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-semibold">S.No</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Product Name</th>

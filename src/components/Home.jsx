@@ -44,12 +44,8 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="text-xl text-gray-200 max-w-2xl leading-relaxed text-center mx-auto">
-            Experience the perfect blend of tradition and quality with our premium selection of rice varieties. Direct from the finest farms to your table, ensuring unmatched freshness and flavor in every grain.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-6 pt-8 justify-center">
+           {/* CTA Buttons */}
+           <div className="flex flex-wrap gap-6 pt-8 justify-center">
             <button
               className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 text-lg rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
             >
@@ -61,6 +57,12 @@ export default function Home() {
               View Products
             </button>
           </div>
+
+          <p className="text-xl text-gray-200 max-w-2xl leading-relaxed text-center mx-auto">
+            Experience the perfect blend of tradition and quality with our premium selection of rice varieties. Direct from the finest farms to your table, ensuring unmatched freshness and flavor in every grain.
+          </p>
+
+         
 
           {/* Contact Information */}
           <div className="pt-16 flex flex-col sm:flex-row gap-8 justify-center text-gray-200">

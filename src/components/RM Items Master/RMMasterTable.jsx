@@ -59,16 +59,16 @@ const RMMasterTable = () => {
           />
           <button
             onClick={handleAddRM}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            className="px-4 py-2 bg-darkRed text-white rounded-md hover:bg-darkRedDark focus:outline-none focus:ring-2 focus:ring-darkRed w-full sm:w-auto"
           >
             Add Raw Material
           </button>
         </div>
-  
+
         {/* RM Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto rounded-lg overflow-hidden shadow-md border-separate border-spacing-0">
-            <thead className="bg-blue-600 text-white">
+            <thead className="bg-darkRed text-white">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-semibold">S.No</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Category</th>
@@ -105,7 +105,7 @@ const RMMasterTable = () => {
             </tbody>
           </table>
         </div>
-  
+
         {/* Pagination */}
         <div className="mt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <span className="text-xs text-gray-500">
@@ -121,17 +121,16 @@ const RMMasterTable = () => {
           </div>
         </div>
       </div>
-  
+
       {/* Toast Container for displaying toast messages */}
       <ToastContainer />
-  
+
       {/* Add RM Modal */}
       {isAddRMModalOpen && (
         <AddRMModal onClose={closeAddRMModal} onSubmit={() => {}} />
       )}
     </div>
   );
-  
 };
 
 export default RMMasterTable;

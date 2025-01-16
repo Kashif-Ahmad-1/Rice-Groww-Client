@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
+import { HiOutlinePencil, HiOutlineTrash, HiPlus, HiMinus } from "react-icons/hi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddUserModal from "./AddUserModal";
@@ -41,6 +41,7 @@ const UsersTable = () => {
   ]);
 
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [expandedRow, setExpandedRow] = useState(null); // Track which row is expanded
 
   const handleAddUser = () => {
     setIsAddUserModalOpen(true); // Open Add User Modal
@@ -55,6 +56,10 @@ const UsersTable = () => {
     toast.success("User deleted successfully!");
   };
 
+  const toggleExpandedRow = (id) => {
+    setExpandedRow(expandedRow === id ? null : id); // Toggle expanded state
+  };
+
   return (
     <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
       <div className="p-4">
@@ -67,55 +72,88 @@ const UsersTable = () => {
           />
           <button
             onClick={handleAddUser}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            className="px-4 py-2 bg-darkRed text-white rounded-md hover:bg-darkRedDark focus:outline-none focus:ring-2 focus:ring-darkRed w-full sm:w-auto"
           >
             Add User
           </button>
         </div>
-  
+
         {/* User Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto rounded-lg overflow-hidden shadow-md border-separate border-spacing-0">
-            <thead className="bg-blue-600 text-white">
+            <thead className="bg-darkRed text-white">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Role</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Name</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Mobile No</th>
-                <th className="px-4 py-2 text-left text-xs font-semibold">Email Id</th>
-                <th className="px-4 py-2 text-left text-xs font-semibold">Location</th>
+                <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Email Id</th>
+                <th className="px-4 py-2 text-left text-xs font-semibold hidden sm:table-cell">Location</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white">
               {users.map((user) => (
-                <tr
-                  key={user.id}
-                  className="hover:bg-gray-100 border-b border-gray-200 transition-colors duration-200"
-                >
-                  <td className="px-4 py-2 text-sm text-gray-700">{user.role}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700">{user.name}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700">{user.mobileNo}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700">{user.emailId}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700">{user.location}</td>
-                  <td className="px-4 py-2 text-sm flex space-x-3 items-center">
-                    {/* Edit Button */}
-                    <button className="text-blue-500 hover:text-blue-700">
-                      <HiOutlinePencil size={18} />
-                    </button>
-                    {/* Delete Button */}
-                    <button
-                      onClick={() => handleDelete(user.id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <HiOutlineTrash size={18} />
-                    </button>
-                  </td>
-                </tr>
+                <React.Fragment key={user.id}>
+                  {/* Main Row */}
+                  <tr
+                    className="hover:bg-gray-100 border-b border-gray-200 transition-colors duration-200 cursor-pointer"
+                    onClick={() => toggleExpandedRow(user.id)} // Toggle on row click
+                  >
+                    <td className="px-4 py-2 text-sm text-gray-700">{user.role}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{user.name}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{user.mobileNo}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{user.emailId}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700 hidden sm:table-cell">{user.location}</td>
+                    <td className="px-4 py-2 text-sm flex space-x-3 items-center">
+                      {/* Edit Button */}
+                      <button className="text-blue-500 hover:text-blue-700">
+                        <HiOutlinePencil size={18} />
+                      </button>
+                      {/* Delete Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent row click from firing
+                          handleDelete(user.id);
+                        }}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <HiOutlineTrash size={18} />
+                      </button>
+                      {/* Expand/Collapse Icon for Mobile */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent row click from firing
+                          toggleExpandedRow(user.id);
+                        }}
+                        className="text-gray-500 hover:text-gray-700 sm:hidden"
+                      >
+                        {expandedRow === user.id ? <HiMinus size={18} /> : <HiPlus size={18} />}
+                      </button>
+                    </td>
+                  </tr>
+
+                  {/* Expanded Row for Mobile */}
+                  {expandedRow === user.id && (
+                    <tr className="bg-gray-100">
+                      <td colSpan="6" className="px-4 py-2 text-sm text-gray-700">
+                        {/* Show expanded data */}
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          <div className="sm:w-1/2">
+                            <strong>Email Id:</strong> {user.emailId}
+                          </div>
+                          <div className="sm:w-1/2">
+                            <strong>Location:</strong> {user.location}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
         </div>
-  
+
         {/* Pagination */}
         <div className="mt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <span className="text-xs text-gray-500">
@@ -131,17 +169,16 @@ const UsersTable = () => {
           </div>
         </div>
       </div>
-  
+
       {/* Toast Container for displaying toast messages */}
       <ToastContainer />
-  
+
       {/* Add User Modal */}
       {isAddUserModalOpen && (
         <AddUserModal onClose={closeAddUserModal} onSubmit={() => {}} />
       )}
     </div>
   );
-  
 };
 
 export default UsersTable;
