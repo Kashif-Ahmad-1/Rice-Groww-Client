@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { HiOutlinePlus } from "react-icons/hi"; // Import + icon
+import axios from "axios"; // Import axios for API calls
+import { toast } from "react-toastify"; // For toast notifications
 
 const AddItemModal = ({ onClose, onSubmit }) => {
   // State to manage multiple items
-  const [items, setItems] = useState([
-    { productName: "", variety: "", pack: "" },
-  ]);
+  const [items, setItems] = useState([{ productName: "", variety: "", pack: "" }]);
 
   const handleChange = (index, field, value) => {
     const newItems = [...items];
@@ -18,17 +18,38 @@ const AddItemModal = ({ onClose, onSubmit }) => {
     setItems([...items, { productName: "", variety: "", pack: "" }]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Call onSubmit function passed from parent to handle adding the new items
-    onSubmit(items);
+    try {
+      const token = localStorage.getItem("token"); // Get token from localStorage
 
-    // Reset the items array
-    setItems([{ productName: "", variety: "", pack: "" }]);
+      // Make a POST request to the API
+      const response = await axios.post(
+        "http://localhost:5000/api/products/products",
+        items,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    // Close the modal
-    onClose();
+      // Call the onSubmit function passed from parent to handle adding the new items
+      onSubmit(items);
+
+      // Notify success
+      toast.success("Items added successfully!");
+
+      // Reset the items array
+      setItems([{ productName: "", variety: "", pack: "" }]);
+
+      // Close the modal
+      onClose();
+    } catch (error) {
+      // Notify error
+      toast.error("Failed to add items. Please try again.");
+    }
   };
 
   return (
@@ -51,7 +72,7 @@ const AddItemModal = ({ onClose, onSubmit }) => {
                   required
                 />
               </div>
-  
+
               <div className="flex-1 mb-2 sm:mb-0">
                 <label htmlFor={`variety-${index}`} className="block text-sm font-medium text-gray-700">
                   Variety
@@ -65,7 +86,7 @@ const AddItemModal = ({ onClose, onSubmit }) => {
                   required
                 />
               </div>
-  
+
               <div className="flex-1 mb-2 sm:mb-0">
                 <label htmlFor={`pack-${index}`} className="block text-sm font-medium text-gray-700">
                   Pack
@@ -81,7 +102,7 @@ const AddItemModal = ({ onClose, onSubmit }) => {
               </div>
             </div>
           ))}
-  
+
           {/* Add more items button */}
           <div className="flex justify-start mb-4">
             <button
@@ -93,7 +114,7 @@ const AddItemModal = ({ onClose, onSubmit }) => {
               Add More Items
             </button>
           </div>
-  
+
           {/* Modal footer */}
           <div className="flex justify-end space-x-4">
             <button
@@ -114,7 +135,6 @@ const AddItemModal = ({ onClose, onSubmit }) => {
       </div>
     </div>
   );
-  
 };
 
 export default AddItemModal;

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { HiOutlinePlus } from "react-icons/hi"; // Import + icon
+import axios from "axios";
+import { toast } from "react-toastify"; // Toast for success or error notifications
 
 const AddRMModal = ({ onClose, onSubmit }) => {
   // State to manage multiple raw materials
-  const [items, setItems] = useState([{ category: "", name: "", type: "" }]);
+  const [items, setItems] = useState([{ category: "", name: "", type: "" , varities: ""}]);
 
   const handleChange = (index, field, value) => {
     const newItems = [...items];
@@ -13,20 +15,39 @@ const AddRMModal = ({ onClose, onSubmit }) => {
 
   const handleAddItem = () => {
     // Add a new empty item to the list
-    setItems([...items, { category: "", name: "", type: "" }]);
+    setItems([...items, { category: "", name: "", type: "",varities: "" }]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Call onSubmit function passed from parent to handle adding the new items
-    onSubmit(items);
+    // API request to add raw materials
+    try {
+      const token = localStorage.getItem("token"); // Get the token from localStorage
+      await axios.post(
+        "http://localhost:5000/api/rmproducts/rmproducts",
+        items.map(item => ({
+          categoryName: item.category,
+          itemName: item.name,
+          itemtype: item.type,
+          varities: item.varities
+        })),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Set the token in headers
+          },
+        }
+      );
 
-    // Reset the items array
-    setItems([{ category: "", name: "", type: "" }]);
+      toast.success("Raw Materials added successfully!"); // Show success toast
+      onSubmit(); // Notify parent to refresh the list
+      onClose(); // Close the modal
 
-    // Close the modal
-    onClose();
+      // Reset the form
+      setItems([{ category: "", name: "", type: "" }]);
+    } catch (error) {
+      toast.error("Failed to add raw materials."); // Show error toast
+    }
   };
 
   return (
@@ -36,6 +57,19 @@ const AddRMModal = ({ onClose, onSubmit }) => {
         <form onSubmit={handleSubmit}>
           {items.map((item, index) => (
             <div key={index} className="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+
+<div className="flex-1 mb-2 sm:mb-0">
+                <label className="block text-sm font-medium text-gray-700">Type</label>
+                <input
+                  type="text"
+                  value={item.type}
+                  onChange={(e) => handleChange(index, "type", e.target.value)}
+                  required
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter type"
+                />
+              </div>
+              
               <div className="flex-1 mb-2 sm:mb-0">
                 <label className="block text-sm font-medium text-gray-700">Category</label>
                 <input
@@ -60,15 +94,16 @@ const AddRMModal = ({ onClose, onSubmit }) => {
                 />
               </div>
   
+              
               <div className="flex-1 mb-2 sm:mb-0">
-                <label className="block text-sm font-medium text-gray-700">Type</label>
+                <label className="block text-sm font-medium text-gray-700">Varities</label>
                 <input
                   type="text"
-                  value={item.type}
-                  onChange={(e) => handleChange(index, "type", e.target.value)}
+                  value={item.varities}
+                  onChange={(e) => handleChange(index, "varities", e.target.value)}
                   required
                   className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="Enter type"
+                  placeholder="Enter varities"
                 />
               </div>
             </div>
@@ -106,7 +141,6 @@ const AddRMModal = ({ onClose, onSubmit }) => {
       </div>
     </div>
   );
-  
 };
 
 export default AddRMModal;

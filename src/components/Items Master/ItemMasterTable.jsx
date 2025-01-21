@@ -1,50 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddItemModal from "./AddItemModal"; // Assume you have an AddItemModal component
+import axios from "axios";
 
 const ItemMasterTable = () => {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      productName: "Product A",
-      variety: "Variety 1",
-      pack: "Pack 1",
-    },
-    {
-      id: 2,
-      productName: "Product B",
-      variety: "Variety 2",
-      pack: "Pack 2",
-    },
-    {
-      id: 3,
-      productName: "Product C",
-      variety: "Variety 3",
-      pack: "Pack 3",
-    },
-    {
-      id: 4,
-      productName: "Product D",
-      variety: "Variety 4",
-      pack: "Pack 4",
-    },
-  ]);
-
+  const [items, setItems] = useState([]);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+ // Fetch items from the API
+ const fetchItems = async () => {
+  try {
+    const token = localStorage.getItem("token"); // Get the token from localStorage
+    const response = await axios.get("http://localhost:5000/api/products/products", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setItems(response.data);
+    setLoading(false);
+  } catch (error) {
+    toast.error("Failed to load items.");
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchItems(); // Call fetchItems when the component mounts
+}, []);
 
   const handleAddItem = () => {
-    setIsAddItemModalOpen(true); // Open Add Item Modal
+    setIsAddItemModalOpen(true);
+   
   };
 
   const closeAddItemModal = () => {
     setIsAddItemModalOpen(false); // Close Add Item Modal
   };
 
-  const handleDelete = (id) => {
-    setItems(items.filter((item) => item.id !== id));
-    toast.success("Item deleted successfully!");
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem("token"); // Get token from localStorage
+      await axios.delete(`http://localhost:5000/api/products/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setItems(items.filter((item) => item._id !== id));
+      toast.success("Item deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete item.");
+    }
   };
 
   return (
@@ -64,7 +72,7 @@ const ItemMasterTable = () => {
             Add Item
           </button>
         </div>
-  
+
         {/* Item Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto rounded-lg overflow-hidden shadow-md border-separate border-spacing-0">
@@ -78,34 +86,40 @@ const ItemMasterTable = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {items.map((item, index) => (
-                <tr
-                  key={item.id}
-                  className="hover:bg-gray-100 border-b border-gray-200 transition-colors duration-200"
-                >
-                  <td className="px-4 py-2 text-sm text-gray-700">{index + 1}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700">{item.productName}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700">{item.variety}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700">{item.pack}</td>
-                  <td className="px-4 py-2 text-sm space-x-3 flex items-center">
-                    {/* Edit Button */}
-                    <button className="text-blue-500 hover:text-blue-700">
-                      <HiOutlinePencil size={18} />
-                    </button>
-                    {/* Delete Button */}
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <HiOutlineTrash size={18} />
-                    </button>
-                  </td>
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="text-center py-4">Loading...</td>
                 </tr>
-              ))}
+              ) : (
+                items.map((item, index) => (
+                  <tr
+                    key={item._id}
+                    className="hover:bg-gray-100 border-b border-gray-200 transition-colors duration-200"
+                  >
+                    <td className="px-4 py-2 text-sm text-gray-700">{index + 1}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{item.productName}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{item.variety}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{item.pack}</td>
+                    <td className="px-4 py-2 text-sm space-x-3 flex items-center">
+                      {/* Edit Button */}
+                      <button className="text-blue-500 hover:text-blue-700">
+                        <HiOutlinePencil size={18} />
+                      </button>
+                      {/* Delete Button */}
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <HiOutlineTrash size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
-  
+
         {/* Pagination */}
         <div className="mt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <span className="text-xs text-gray-500">
@@ -121,17 +135,16 @@ const ItemMasterTable = () => {
           </div>
         </div>
       </div>
-  
+
       {/* Toast Container for displaying toast messages */}
       <ToastContainer />
-  
+
       {/* Add Item Modal */}
       {isAddItemModalOpen && (
-        <AddItemModal onClose={closeAddItemModal} onSubmit={() => {}} />
+        <AddItemModal onClose={closeAddItemModal} onSubmit={() => {fetchItems()}} />
       )}
     </div>
   );
-  
 };
 
 export default ItemMasterTable;

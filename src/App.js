@@ -7,6 +7,8 @@ import ItemMasterTable from "./components/Items Master/ItemMasterTable";
 import RMMasterTable from "./components/RM Items Master/RMMasterTable";
 import Layout from "./components/Layout/Layout"; // Import Layout component
 import LoginPage from "./components/Authentication/LoginPage";
+import MillingPlantOutput from "./components/Milling Back Output/MillingPlantOutput";
+import RiceProdctionPage from "./components/Rice Production Plantation/RiceProdctionPage";
 
 function App() {
   return (
@@ -45,6 +47,22 @@ function App() {
             element={
               <Layout>
                 <RMMasterTable />
+              </Layout>
+            }
+          />
+          <Route
+            path="/riceproduction"
+            element={
+              <Layout>
+                <RiceProdctionPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/milling/output"
+            element={
+              <Layout>
+                <MillingPlantOutput />
               </Layout>
             }
           />
