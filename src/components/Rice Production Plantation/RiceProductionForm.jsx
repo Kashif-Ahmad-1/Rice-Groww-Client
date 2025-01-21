@@ -9,7 +9,6 @@ const initialEntry = {
   lotNumber: "",
   productType: "", // Added productType for Paddy or Rice selection
   riceType: "",
-  variety: "",
   pack: "",
   mill: "",
   quantity: "",
@@ -24,8 +23,8 @@ export default function RiceProductionForm({ onSubmit }) {
   const [paddyData, setPaddyData] = useState({});
   const token = localStorage.getItem("token"); // You can set this token dynamically or fetch it from a store/context
 
- // Fetch rice data
-useEffect(() => {
+  // Fetch rice data
+  useEffect(() => {
     const fetchRiceData = async () => {
       try {
         const response = await axios.get(
@@ -39,14 +38,9 @@ useEffect(() => {
 
         const transformedData = response.data.reduce((acc, item) => {
           const riceType = item.itemName; // Rice type as itemName
-          const variety = item.varities; // Variety name
 
           if (!acc[riceType]) {
             acc[riceType] = { varieties: [] };
-          }
-
-          if (!acc[riceType].varieties.includes(variety)) {
-            acc[riceType].varieties.push(variety);
           }
 
           return acc;
@@ -62,8 +56,7 @@ useEffect(() => {
   }, [token]);
 
   // Fetch paddy data
-
-   useEffect(() => {
+  useEffect(() => {
     const fetchPaddyData = async () => {
       try {
         const response = await axios.get(
@@ -78,14 +71,9 @@ useEffect(() => {
         // Transform the paddy data to match the structure we need
         const transformedPaddyData = response.data.reduce((acc, item) => {
           const paddyType = item.itemName; // Paddy type as itemName
-          const variety = item.varities; // Variety name
 
           if (!acc[paddyType]) {
             acc[paddyType] = { varieties: [] };
-          }
-
-          if (!acc[paddyType].varieties.includes(variety)) {
-            acc[paddyType].varieties.push(variety);
           }
 
           return acc;
@@ -118,8 +106,19 @@ useEffect(() => {
   const updateEntry = (index, field, value) => {
     const newEntries = [...entries];
     newEntries[index] = { ...newEntries[index], [field]: value };
+  
+    // If productType is changed to rice or paddy, automatically set the mill
+    if (field === "productType") {
+      if (value === "rice") {
+        newEntries[index].mill = "mill-a"; // Sortex for rice
+      } else if (value === "paddy") {
+        newEntries[index].mill = "mill-b"; // Milling for paddy
+      }
+    }
+  
     setEntries(newEntries);
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -233,46 +232,6 @@ useEffect(() => {
                 </div>
               )}
 
-              {/* Variety */}
-              {entry.riceType && (
-                <div className="flex-1 min-w-[150px] space-y-1">
-                  <label
-                    htmlFor={`variety-${index}`}
-                    className="text-xs font-medium text-gray-700"
-                  >
-                    Variety
-                  </label>
-                  <select
-                    id={`variety-${index}`}
-                    value={entry.variety}
-                    onChange={(e) =>
-                      updateEntry(index, "variety", e.target.value)
-                    }
-                    className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"
-                  >
-                    <option value="" disabled>
-                      Select variety
-                    </option>
-                    {entry.productType === "rice" &&
-                      riceData[entry.riceType]?.varieties.map(
-                        (variety, idx) => (
-                          <option key={idx} value={variety}>
-                            {variety}
-                          </option>
-                        )
-                      )}
-                    {entry.productType === "paddy" &&
-                      paddyData[entry.riceType]?.varieties.map(
-                        (variety, idx) => (
-                          <option key={idx} value={variety}>
-                            {variety}
-                          </option>
-                        )
-                      )}
-                  </select>
-                </div>
-              )}
-
               {/* Mill */}
               <div className="flex-1 min-w-[150px] space-y-1">
                 <label
@@ -366,10 +325,12 @@ useEffect(() => {
 
       {/* Modal */}
       <ModalForm
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleAddDetails}
-      />
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  onSave={handleAddDetails}
+  
+/>
+
     </form>
   );
 }

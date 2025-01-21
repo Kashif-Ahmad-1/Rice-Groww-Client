@@ -9,6 +9,7 @@ import Layout from "./components/Layout/Layout"; // Import Layout component
 import LoginPage from "./components/Authentication/LoginPage";
 import MillingPlantOutput from "./components/Milling Back Output/MillingPlantOutput";
 import RiceProdctionPage from "./components/Rice Production Plantation/RiceProdctionPage";
+import MillingPlantFront from "./components/Milling Front Output/MillingPlantFront";
 
 function App() {
   return (
@@ -63,6 +64,14 @@ function App() {
             element={
               <Layout>
                 <MillingPlantOutput />
+              </Layout>
+            }
+          />
+          <Route
+            path="/milling/front"
+            element={
+              <Layout>
+                <MillingPlantFront />
               </Layout>
             }
           />

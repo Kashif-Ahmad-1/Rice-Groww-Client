@@ -75,6 +75,22 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
               RM Master
             </Link>
           </li>
+          <li>
+            <Link
+              to="/riceproduction"
+              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
+            >
+              Rice Production
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/milling/front"
+              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
+            >
+              Milling Front
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
