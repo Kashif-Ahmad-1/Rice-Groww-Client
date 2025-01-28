@@ -1,37 +1,33 @@
 import { useState } from "react";
 import { PlusCircle } from "lucide-react"; // Import the PlusCircle icon
 
-export default function ModalForm({ isOpen, onClose, onSave }) {
-  // Initial state for form entries
-  const initialEntries = [{ productType: "", percentage: "", bagSize: "", quantity: "" }];
+export default function ModalForm({ isOpen, onClose, onSave, productType,riceData,
+  paddyData }) {
+  const initialEntries = [{ mixingproductType: "", percentage: "", bagSize: "", quantity: "" }];
   const [entries, setEntries] = useState(initialEntries);
 
-  // Update entry field value based on index
+  const riceTypes = ["Rice Type 1", "Rice Type 2"]; // You can dynamically fetch this data from your API
+  const paddyTypes = ["Paddy Type 1", "Paddy Type 2"]; // Similarly, fetch paddy types as needed
+
   const handleChange = (index, field, value) => {
     const updatedEntries = [...entries];
     updatedEntries[index][field] = value;
     setEntries(updatedEntries);
   };
 
-  // Add a new entry to the form
   const handleAddEntry = () => {
-    setEntries([
-      ...entries,
-      { productType: "", percentage: "", bagSize: "", quantity: "" },
-    ]);
+    setEntries([...entries, { mixingproductType: "", percentage: "", bagSize: "", quantity: "" }]);
   };
 
-  // Save the form data and close the modal
   const handleSave = () => {
-    onSave(entries); // Save the entries
-    setEntries(initialEntries); // Reset entries to initial state
-    onClose(); // Close the modal
+    onSave(entries); 
+    setEntries(initialEntries);
+    onClose();
   };
 
-  // Handle cancel (reset the form and close modal)
   const handleCancel = () => {
-    setEntries(initialEntries); // Reset entries to initial state
-    onClose(); // Close the modal
+    setEntries(initialEntries);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -44,25 +40,28 @@ export default function ModalForm({ isOpen, onClose, onSave }) {
         <div className="space-y-4">
           {entries.map((entry, index) => (
             <div key={index}>
-              {/* Inputs in a single row */}
               <div className="flex gap-4 items-end">
-                {/* Product Type (Paddy/Rice) */}
+                {/* Mixing Product Type */}
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700">
-                    Product Type
+                    Mixing Product Type
                   </label>
                   <select
-                    value={entry.productType}
+                    value={entry.mixingproductType}
                     onChange={(e) =>
-                      handleChange(index, "productType", e.target.value)
+                      handleChange(index, "mixingproductType", e.target.value)
                     }
                     className="w-full p-2 border border-gray-300 rounded-md"
                   >
-                    <option value="" disabled>
-                      Select product type
-                    </option>
-                    <option value="rice">Rice</option>
-                    <option value="paddy">Paddy</option>
+                    <option value="" disabled>Select Mixing Product Type</option>
+                    {productType === "rice"
+                      ? Object.keys(riceData).map((type, idx) => (
+                          <option key={idx} value={type}>{type}</option>
+                        ))
+                      : productType === "paddy" &&
+                        Object.keys(paddyData).map((type, idx) => (
+                          <option key={idx} value={type}>{type}</option>
+                        ))}
                   </select>
                 </div>
 
@@ -141,7 +140,7 @@ export default function ModalForm({ isOpen, onClose, onSave }) {
           </button>
           <button
             type="button"
-            onClick={handleCancel} // Use the handleCancel function here
+            onClick={handleCancel}
             className="ml-2 bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
           >
             Cancel
@@ -151,3 +150,4 @@ export default function ModalForm({ isOpen, onClose, onSave }) {
     </div>
   );
 }
+

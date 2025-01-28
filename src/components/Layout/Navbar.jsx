@@ -1,99 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { HiMenu, HiX } from "react-icons/hi";
-import logo from "../images/logo.png";
+import React, { useState, useEffect } from "react";
+import { FaBars } from "react-icons/fa";
 
-const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
+const Navbar = ({ toggleSidebar }) => {
   return (
-    <header className="bg-gradient-to-r from-darkRed-600 to-darkRed-800 p-5 shadow-xl flex justify-between items-center w-full">
-      {/* Hamburger Menu (Left Side) */}
-      <div className="flex items-center space-x-4">
-        <button onClick={toggleSidebar} className="text-white md:hidden">
-          {isSidebarOpen ? (
-            <HiX size={30} className="hover:text-yellow-400 transition duration-300" />
-          ) : (
-            <HiMenu size={30} className="hover:text-yellow-400 transition duration-300" />
-          )}
+    <div>
+      <nav className="flex items-center justify-between p-4  mt-0" style={{ backgroundColor: '#880000' }}>
+        {/* Left Section: Hamburger Menu for Sidebar */}
+        <button
+          className="p-2 rounded-md text-white hover:bg-indigo-700 transition-colors duration-300"
+          onClick={toggleSidebar}
+        >
+          <FaBars className="text-2xl" />
         </button>
 
-        {/* Logo */}
-        <div className="flex items-center gap-4 text-white font-extrabold text-2xl tracking-wider">
-          <img
-            src={logo}
-            alt="Veer Overseas Ltd."
-            className="w-12 h-12 object-contain rounded-full border-4 border-yellow-400 shadow-lg"
-          />
-          <Link
-            to="/"
-            className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg"
-          >
-            VEER OVERSEAS LTD.
-          </Link>
+        {/* Center Section: App Title or Logo */}
+        <div className="text-2xl font-bold tracking-wide text-white ">
+          <span className="text-indigo-100">SMART </span>
+          <span className="text-pink-100">ITBOX</span>
         </div>
-      </div>
-
-      {/* Navbar Links (Desktop View) */}
-      <nav className="hidden md:flex space-x-12 text-white">
-        <ul className="flex space-x-12">
-          <li>
-            <Link
-              to="/"
-              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/users"
-              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
-            >
-              Users
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/clients"
-              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
-            >
-              Clients
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/items-master"
-              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
-            >
-              Items
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/rm-master"
-              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
-            >
-              RM Master
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/riceproduction"
-              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
-            >
-              Rice Production
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/milling/front"
-              className="hover:text-yellow-400 transition duration-300 ease-in-out text-lg font-medium transform hover:scale-105"
-            >
-              Milling Front
-            </Link>
-          </li>
-        </ul>
       </nav>
-    </header>
+    </div>
   );
 };
 

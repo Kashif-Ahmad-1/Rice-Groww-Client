@@ -25,7 +25,7 @@ const AddRMModal = ({ onClose, onSubmit }) => {
     try {
       const token = localStorage.getItem("token"); // Get the token from localStorage
       await axios.post(
-        "http://localhost:5000/api/rmproducts/rmproducts",
+        "https://veer-rice-backend.onrender.com/api/rmproducts/rmproducts",
         items.map(item => ({
           categoryName: item.category,
           itemName: item.name,

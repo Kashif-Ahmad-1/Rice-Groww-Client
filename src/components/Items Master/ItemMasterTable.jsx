@@ -14,7 +14,7 @@ const ItemMasterTable = () => {
  const fetchItems = async () => {
   try {
     const token = localStorage.getItem("token"); // Get the token from localStorage
-    const response = await axios.get("http://localhost:5000/api/products/products", {
+    const response = await axios.get("https://veer-rice-backend.onrender.com/api/products/products", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -43,7 +43,7 @@ useEffect(() => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token"); // Get token from localStorage
-      await axios.delete(`http://localhost:5000/api/products/products/${id}`, {
+      await axios.delete(`https://veer-rice-backend.onrender.com/api/products/products/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

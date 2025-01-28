@@ -10,12 +10,16 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen"> {/* Ensure the container takes full screen height */}
       <div className="flex flex-1">
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
-        <div className="flex-1 flex flex-col">
+        <div
+          className={`flex-1 p-0 transition-all duration-300 ease-in-out ${
+            sidebarOpen ? "ml-64" : "ml-0"
+          }`}
+        >
           {/* Navbar */}
           <Navbar toggleSidebar={toggleSidebar} />
 
@@ -23,11 +27,13 @@ const Layout = ({ children }) => {
           <div className="flex-1 p-6 overflow-auto">{children}</div>
 
           {/* Footer */}
-          <footer className="bg-gray-800 text-white p-4 text-center">
+          {/* <footer className="bg-gray-800 text-white p-4 text-center mt-auto">
+         
             <p className="text-sm">
-              © 2025 <span className="text-yellow-400">Smart ItBox</span>. All rights reserved.
+              © 2025 <span className="text-yellow-400">Smart ItBox</span>. All
+              rights reserved.
             </p>
-          </footer>
+          </footer> */}
         </div>
       </div>
     </div>

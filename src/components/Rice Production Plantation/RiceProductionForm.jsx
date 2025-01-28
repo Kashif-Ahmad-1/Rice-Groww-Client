@@ -4,7 +4,8 @@ import DatePicker from "react-datepicker"; // Importing react-datepicker
 import "react-datepicker/dist/react-datepicker.css"; // Import the required CSS for date picker
 import ModalForm from "./ModalForm"; // Assuming the ModalForm component is created
 import axios from "axios";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const initialEntry = {
   lotNumber: "",
   productType: "", // Added productType for Paddy or Rice selection
@@ -14,9 +15,9 @@ const initialEntry = {
   quantity: "",
 };
 
-export default function RiceProductionForm({ onSubmit }) {
+export default function RiceProductionForm({ setIsRiceModalOpen }) {
   const [entries, setEntries] = useState([initialEntry]);
-  const [startDate, setStartDate] = useState(undefined); // Add a separate state for start date
+  const [startDate, setStartDate] = useState(new Date()); // Add a separate state for start date
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [riceData, setRiceData] = useState({});
@@ -28,7 +29,7 @@ export default function RiceProductionForm({ onSubmit }) {
     const fetchRiceData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/rmproducts/riceproducts/details",
+          "https://veer-rice-backend.onrender.com/api/rmproducts/riceproducts/details",
           {
             headers: {
               Authorization: `Bearer ${token}`, // Include the token in the header
@@ -60,7 +61,7 @@ export default function RiceProductionForm({ onSubmit }) {
     const fetchPaddyData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/rmproducts/paddyproducts/details",
+          "https://veer-rice-backend.onrender.com/api/rmproducts/paddyproducts/details",
           {
             headers: {
               Authorization: `Bearer ${token}`, // Include the token in the header
@@ -97,33 +98,96 @@ export default function RiceProductionForm({ onSubmit }) {
     setEntries(newEntries);
   };
 
-  const handleAddDetails = (data) => {
-    const updatedEntries = [...entries];
-    updatedEntries[currentIndex].additionalDetails.push(data);
-    setEntries(updatedEntries);
-  };
-
-  const updateEntry = (index, field, value) => {
-    const newEntries = [...entries];
-    newEntries[index] = { ...newEntries[index], [field]: value };
+ // Handle adding mixing details after the modal
+ const handleAddDetails = (data) => {
+  const updatedEntries = [...entries];
+  const currentEntry = updatedEntries[currentIndex];
   
-    // If productType is changed to rice or paddy, automatically set the mill
-    if (field === "productType") {
-      if (value === "rice") {
-        newEntries[index].mill = "mill-a"; // Sortex for rice
-      } else if (value === "paddy") {
-        newEntries[index].mill = "mill-b"; // Milling for paddy
-      }
+  console.log("Mixing Data received from Modal:", data);
+
+  // Map the data received from the modal to match the API's expected format
+  const formattedMixing = data.map(item => ({
+    productType: item.mixingproductType,  // From modal
+    mixingPercentage: parseFloat(item.percentage),  // Ensure it's a number
+    bagSize: parseFloat(item.bagSize),  // Ensure it's a number
+    mixingQuantity: parseFloat(item.quantity),  // Ensure it's a number
+  }));
+
+  // Add the formatted mixing data to the current entry
+  currentEntry.mixing = formattedMixing;
+
+  setEntries(updatedEntries);
+};
+
+
+const updateEntry = (index, field, value) => {
+  const newEntries = [...entries];
+  newEntries[index] = { ...newEntries[index], [field]: value };
+
+  // If productType is changed to rice or paddy, automatically set the mill
+  if (field === "productType") {
+    if (value === "rice") {
+      newEntries[index].mill = "Sortex"; // Set to Sortex for rice
+      newEntries[index].riceType = ""; // Clear riceType if switching to rice
+    } else if (value === "paddy") {
+      newEntries[index].mill = "Milling"; // Set to Milling for paddy
+      newEntries[index].riceType = ""; // Clear riceType if switching to paddy
     }
-  
-    setEntries(newEntries);
-  };
+  }
+
+  setEntries(newEntries);
+};
+
   
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(entries, startDate); // Pass the startDate to the parent
+  const token = localStorage.getItem("token");
+    // Prepare the productions data to match the API format
+    const productions = entries.map(entry => {
+      const production = {
+        lotNo: entry.lotNumber,
+        startDate: startDate ? startDate.toISOString() : "", // Convert startDate to ISO string
+        productType: entry.productType,
+        riceType: entry.productType === "rice" ? entry.riceType : entry.riceType,
+        mill: entry.mill,
+        quantity: entry.quantity,
+        mixing: entry.mixing || null,
+      };
+  
+      return production;
+    });
+  
+    const requestData = {
+      productions: productions,
+    };
+  
+    // For debugging: log the data to see if it matches the expected structure
+    console.log("Request Data for Submit:", requestData);
+  
+    // Send data to the API
+    try {
+      const response = await axios.post(
+        "https://veer-rice-backend.onrender.com/api/riceproductions/create",
+        requestData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+          },
+        }
+      );
+  
+      toast.success("Rice Production Created Successfully");
+      // console.log("Rice Production Created Successfully:", response.data);
+      setIsRiceModalOpen(false);
+      // You can handle success here, like clearing the form or showing a success message
+    } catch (error) {
+      console.error("Error creating rice production:", error);
+      // Handle errors here, maybe show an error message to the user
+      toast.error("Failed to create rice production");
+    }
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>
@@ -232,41 +296,30 @@ export default function RiceProductionForm({ onSubmit }) {
                 </div>
               )}
 
-              {/* Mill */}
-              <div className="flex-1 min-w-[150px] space-y-1">
-                <label
-                  htmlFor={`mill-${index}`}
-                  className="text-xs font-medium text-gray-700"
-                >
-                  Mill
-                </label>
-                <select
-                  id={`mill-${index}`}
-                  value={entry.mill}
-                  onChange={(e) => updateEntry(index, "mill", e.target.value)}
-                  className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"
-                >
-                  <option value="" disabled>
-                    Select mill
-                  </option>
-                  <option value="mill-a">Sortex</option>
-                  <option value="mill-b">Milling</option>
-                </select>
-              </div>
+            {/* Mill */}
+<div className="flex-1 min-w-[150px] space-y-1">
+  <label
+    htmlFor={`mill-${index}`}
+    className="text-xs font-medium text-gray-700"
+  >
+    Mill
+  </label>
+  <select
+    id={`mill-${index}`}
+    value={entry.mill}
+    onChange={(e) => updateEntry(index, "mill", e.target.value)}
+    className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"
+  >
+    <option value="" disabled>
+      Select mill
+    </option>
+    <option value="Sortex">Sortex</option> {/* Use Sortex instead of mill-a */}
+    <option value="Milling">Milling</option> {/* Use Milling instead of mill-b */}
+  </select>
+</div>
 
-              {/* Add Details Button */}
-              <div className="flex items-center justify-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCurrentIndex(index);
-                    setIsModalOpen(true);
-                  }}
-                  className="text-blue-500 hover:text-blue-700 focus:outline-none"
-                >
-                  Add Details
-                </button>
-              </div>
+
+              
 
               {/* Quantity */}
               <div className="flex-1 min-w-[150px] space-y-1">
@@ -287,7 +340,20 @@ export default function RiceProductionForm({ onSubmit }) {
                   className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"
                 />
               </div>
-
+{/* Add Details Button */}
+<div className="flex items-center">
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentIndex(index);
+                setIsModalOpen(true);
+              }}
+              className="text-blue-500 hover:text-blue-700 focus:outline-none"
+            >
+              <PlusCircle className="h-5 w-5" />
+              Add Details
+            </button>
+          </div>
               {/* Remove Entry Button (Cross) */}
               <div className="flex items-center justify-center">
                 <button
@@ -302,33 +368,46 @@ export default function RiceProductionForm({ onSubmit }) {
           ))}
         </div>
 
-        {/* Add Another Entry Button */}
-        <button
-          type="button"
-          onClick={addEntry}
-          className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Another Entry
-        </button>
-      </div>
+         {/* Add Another Entry Button */}
+         <div className="flex justify-end space-x-4 items-center">
+  {/* Add Another Entry Button */}
+  <button
+    type="button"
+    onClick={addEntry}
+    className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <PlusCircle className="mr-2 h-4 w-4" />
+    Add Another Entry
+  </button>
 
-      {/* Submit Button */}
-      <div className="flex justify-center mt-2">
-        <button
-          type="submit"
-          className="w-full px-4 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Submit
-        </button>
-      </div>
+  {/* Submit Button */}
+  <button
+    type="submit"
+    className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    Submit
+  </button>
 
+  {/* Close Button */}
+  <button
+    onClick={() => setIsRiceModalOpen(false)}
+    className="px-4 py-2 bg-gray-300 rounded-md text-sm hover:bg-gray-400 focus:outline-none"
+  >
+    Close
+  </button>
+</div>
+
+        
+      </div>
+      <ToastContainer />
       {/* Modal */}
       <ModalForm
   isOpen={isModalOpen}
   onClose={() => setIsModalOpen(false)}
   onSave={handleAddDetails}
-  
+  productType={entries[currentIndex]?.productType} // Pass the productType here
+  riceData={riceData} // Pass riceData here
+  paddyData={paddyData} // Pass paddyData here
 />
 
     </form>

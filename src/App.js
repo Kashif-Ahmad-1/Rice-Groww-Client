@@ -10,6 +10,8 @@ import LoginPage from "./components/Authentication/LoginPage";
 import MillingPlantOutput from "./components/Milling Back Output/MillingPlantOutput";
 import RiceProdctionPage from "./components/Rice Production Plantation/RiceProdctionPage";
 import MillingPlantFront from "./components/Milling Front Output/MillingPlantFront";
+import QCLabReport from "./components/QC Report/QCLabReport";
+import SortexOutput from "./components/Sortex Output/SortexOutput";
 
 function App() {
   return (
@@ -72,6 +74,22 @@ function App() {
             element={
               <Layout>
                 <MillingPlantFront />
+              </Layout>
+            }
+          />
+          <Route
+            path="/milling/Qclab-report"
+            element={
+              <Layout>
+                <QCLabReport />
+              </Layout>
+            }
+          />
+          <Route
+            path="/milling/sortex/output"
+            element={
+              <Layout>
+                <SortexOutput />
               </Layout>
             }
           />

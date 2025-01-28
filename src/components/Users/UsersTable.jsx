@@ -63,7 +63,7 @@ const UsersTable = () => {
     if (result.isConfirmed) {
       try {
         setLoading(true);
-        await axios.delete(`http://localhost:5000/api/users/delete-user/${id}`, {
+        await axios.delete(`https://veer-rice-backend.onrender.com/api/users/delete-user/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

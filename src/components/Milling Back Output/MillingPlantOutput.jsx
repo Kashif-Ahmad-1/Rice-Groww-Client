@@ -9,10 +9,14 @@ const lotOptions = [
 const initialRows = [
   { id: 1, parameter: "Rejection Yellow (पीला)", bagsType: "PP", bagsPP: "100", qty: "100", qtyMt: 4.5 },
   { id: 2, parameter: "Rejection Yellow (पीला)", bagsType: "Jute", bagsPP: "200", qty: "200", qtyMt: 11 },
-  { id: 3, parameter: "Rejection black (काला)", bagsType: "Same as above", bagsPP: "", qty: "", qtyMt: 7 },
-  { id: 4, parameter: "Rejection broken (टूटा हुआ )", bagsType: "", bagsPP: "", qty: "", qtyMt: 8.5 },
-  { id: 5, parameter: "Sizer (साइज़र )", bagsType: "", bagsPP: "", qty: "", qtyMt: 3 },
-  { id: 6, parameter: "Sizer Broken (साइज़र टूटा हुआ)", bagsType: "", bagsPP: "", qty: "", qtyMt: 5 },
+  { id: 3, parameter: "Rejection black (काला)", bagsType: "PP", bagsPP: "", qty: "", qtyMt: 7 },
+  { id: 3, parameter: "Rejection black (काला)", bagsType: "Jute", bagsPP: "", qty: "", qtyMt: 7 },
+  { id: 4, parameter: "Rejection broken (टूटा हुआ )", bagsType: "PP", bagsPP: "", qty: "", qtyMt: 8.5 },
+  { id: 4, parameter: "Rejection broken (टूटा हुआ )", bagsType: "Jute", bagsPP: "", qty: "", qtyMt: 8.5 },
+  { id: 5, parameter: "Sizer (साइज़र )", bagsType: "PP", bagsPP: "", qty: "", qtyMt: 3 },
+  { id: 5, parameter: "Sizer (साइज़र )", bagsType: "Jute", bagsPP: "", qty: "", qtyMt: 3 },
+  { id: 6, parameter: "Sizer Broken (साइज़र टूटा हुआ)", bagsType: "PP", bagsPP: "", qty: "", qtyMt: 5 },
+  { id: 6, parameter: "Sizer Broken (साइज़र टूटा हुआ)", bagsType: "Jute", bagsPP: "", qty: "", qtyMt: 5 },
 ]
 
 export default function MillingPlantOutput() {
@@ -50,10 +54,10 @@ export default function MillingPlantOutput() {
   const totalQtyMt = rows.reduce((sum, row) => sum + row.qtyMt, 0)
 
   return (
-    <div className="container mx-auto p-4 max-w-5xl">
+    <div className="container mx-auto p-2 max-w-7xl">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="bg-zinc-100 p-4 border-b">
-          <h2 className="text-xl font-bold">Milling Plant Back Output</h2>
+        <div className="bg-zinc-100 p-2 border-b">
+          <h2 className="text-sm font-bold">Milling Plant Back Output</h2>
         </div>
         <div className="p-6">
           {/* Header Section */}

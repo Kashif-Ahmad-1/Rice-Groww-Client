@@ -4,20 +4,22 @@ import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddRMModal from "./AddRMModal"; // Assume you have an AddRMModal component
+import EditRMModal from "./EditRMModal"; // Add the EditRMModal component
 
 const RMMasterTable = () => {
   const [rawMaterials, setRawMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); // For search
-  const [currentPage, setCurrentPage] = useState(1); // For pagination
-  const [itemsPerPage] = useState(50); // Set items per page
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(50);
   const [isAddRMModalOpen, setIsAddRMModalOpen] = useState(false);
+  const [isEditRMModalOpen, setIsEditRMModalOpen] = useState(false);
+  const [selectedRawMaterial, setSelectedRawMaterial] = useState(null);
 
-  // Fetch raw materials from the API
   const fetchRawMaterials = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/rmproducts/rmproducts", {
+      const response = await axios.get("https://veer-rice-backend.onrender.com/api/rmproducts/rmproducts", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -30,11 +32,10 @@ const RMMasterTable = () => {
     }
   };
 
-  // Delete a raw material from the API
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/rmproducts/rmproducts/${id}`, {
+      await axios.delete(`https://veer-rice-backend.onrender.com/api/rmproducts/rmproducts/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,11 +47,15 @@ const RMMasterTable = () => {
     }
   };
 
+  const handleEdit = (material) => {
+    setSelectedRawMaterial(material);
+    setIsEditRMModalOpen(true);
+  };
+
   useEffect(() => {
-    fetchRawMaterials(); // Fetch raw materials on component mount
+    fetchRawMaterials();
   }, []);
 
-  // Filter raw materials based on the search query
   const filteredRawMaterials = rawMaterials.filter((material) => {
     return (
       material.categoryName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -59,34 +64,36 @@ const RMMasterTable = () => {
     );
   });
 
-  // Calculate the data to display for the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredRawMaterials.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Handle page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
   const handleAddRM = () => {
-    setIsAddRMModalOpen(true); // Open Add RM Modal
+    setIsAddRMModalOpen(true);
   };
 
   const closeAddRMModal = () => {
-    setIsAddRMModalOpen(false); // Close Add RM Modal
+    setIsAddRMModalOpen(false);
+  };
+
+  const closeEditRMModal = () => {
+    setIsEditRMModalOpen(false);
+    setSelectedRawMaterial(null);
   };
 
   return (
     <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
       <div className="p-4">
-        {/* Search and Add RM Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
           <input
             type="text"
             placeholder="Search Raw Materials..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="p-2 border border-gray-300 rounded-md shadow-sm w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
@@ -97,7 +104,6 @@ const RMMasterTable = () => {
           </button>
         </div>
 
-        {/* RM Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto rounded-lg overflow-hidden shadow-md border-separate border-spacing-0">
             <thead className="bg-darkRed text-white">
@@ -129,11 +135,12 @@ const RMMasterTable = () => {
                     <td className="px-4 py-2 text-sm text-gray-700">{material.itemName}</td>
                     <td className="px-4 py-2 text-sm text-gray-700">{material.varities}</td>
                     <td className="px-4 py-2 text-sm flex space-x-3 items-center">
-                      {/* Edit Button */}
-                      <button className="text-blue-500 hover:text-blue-700">
+                      <button
+                        onClick={() => handleEdit(material)}
+                        className="text-blue-500 hover:text-blue-700"
+                      >
                         <HiOutlinePencil size={18} />
                       </button>
-                      {/* Delete Button */}
                       <button
                         onClick={() => handleDelete(material._id)}
                         className="text-red-500 hover:text-red-700"
@@ -148,7 +155,6 @@ const RMMasterTable = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         <div className="mt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <span className="text-xs text-gray-500">
             Showing {indexOfFirstItem + 1} to {indexOfLastItem} of {filteredRawMaterials.length} items
@@ -172,12 +178,18 @@ const RMMasterTable = () => {
         </div>
       </div>
 
-      {/* Toast Container for displaying toast messages */}
       <ToastContainer />
 
-      {/* Add RM Modal */}
       {isAddRMModalOpen && (
         <AddRMModal onClose={closeAddRMModal} onSubmit={fetchRawMaterials} />
+      )}
+
+      {isEditRMModalOpen && selectedRawMaterial && (
+        <EditRMModal
+          rawMaterial={selectedRawMaterial}
+          onClose={closeEditRMModal}
+          onSubmit={fetchRawMaterials}
+        />
       )}
     </div>
   );
