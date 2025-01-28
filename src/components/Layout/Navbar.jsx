@@ -20,7 +20,7 @@ const Navbar = ({ toggleSidebar }) => {
           {/* Company Name */}
           <div className="text-2xl font-extrabold tracking-tight text-white">
             <span className="text-white text-2xl font-serif">VEER </span>
-            <span className="text-white font-sans">OVERSEAS Pvt. Ltd.</span>
+            <span className="text-white font-sans">OVERSEAS PVT. LTD.</span>
           </div>
         </div>
       </nav>
