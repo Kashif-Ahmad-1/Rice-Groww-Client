@@ -29,7 +29,7 @@ export default function RiceProductionForm({ setIsRiceModalOpen }) {
     const fetchRiceData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/rmproducts/riceproducts/details",
+          "https://veer-rice-backend.onrender.com/api/rmproducts/riceproducts/details",
           {
             headers: {
               Authorization: `Bearer ${token}`, // Include the token in the header
@@ -61,7 +61,7 @@ export default function RiceProductionForm({ setIsRiceModalOpen }) {
     const fetchPaddyData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/rmproducts/paddyproducts/details",
+          "https://veer-rice-backend.onrender.com/api/rmproducts/paddyproducts/details",
           {
             headers: {
               Authorization: `Bearer ${token}`, // Include the token in the header
@@ -168,7 +168,7 @@ const updateEntry = (index, field, value) => {
     // Send data to the API
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/riceproductions/create",
+        "https://veer-rice-backend.onrender.com/api/riceproductions/create",
         requestData,
         {
           headers: {

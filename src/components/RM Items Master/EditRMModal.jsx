@@ -33,7 +33,7 @@ const EditRMModal = ({ rawMaterial, onClose, onSubmit }) => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:5000/api/rmproducts/rmproducts/${rawMaterial._id}`,
+        `https://veer-rice-backend.onrender.com/api/rmproducts/rmproducts/${rawMaterial._id}`,
         formData,
         {
           headers: {

@@ -19,7 +19,7 @@ const RMMasterTable = () => {
   const fetchRawMaterials = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/rmproducts/rmproducts", {
+      const response = await axios.get("https://veer-rice-backend.onrender.com/api/rmproducts/rmproducts", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -35,7 +35,7 @@ const RMMasterTable = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/rmproducts/rmproducts/${id}`, {
+      await axios.delete(`https://veer-rice-backend.onrender.com/api/rmproducts/rmproducts/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
