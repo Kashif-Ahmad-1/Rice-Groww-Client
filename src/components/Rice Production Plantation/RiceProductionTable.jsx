@@ -16,7 +16,7 @@ export function RiceProductionTable() {
       const token = localStorage.getItem("token"); // Get token from localStorage
 
       try {
-        const response = await axios.get("https://veer-rice-backend.onrender.com/api/riceproductions", {
+        const response = await axios.get("http://localhost:5000/api/riceproductions", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

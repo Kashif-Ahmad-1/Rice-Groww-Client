@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { FaBars } from "react-icons/fa";
+import logo from './../images/logo.png';
 
 const Navbar = ({ toggleSidebar }) => {
   return (
     <div>
-      <nav className="flex items-center justify-between p-4  mt-0" style={{ backgroundColor: '#880000' }}>
+      <nav className="flex items-center justify-between p-4 mt-0 bg-[#880000] shadow-lg">
         {/* Left Section: Hamburger Menu for Sidebar */}
         <button
           className="p-2 rounded-md text-white hover:bg-indigo-700 transition-colors duration-300"
@@ -13,10 +14,14 @@ const Navbar = ({ toggleSidebar }) => {
           <FaBars className="text-2xl" />
         </button>
 
-        {/* Center Section: App Title or Logo */}
-        <div className="text-2xl font-bold tracking-wide text-white ">
-          <span className="text-indigo-100">SMART </span>
-          <span className="text-pink-100">ITBOX</span>
+        {/* Right Section: Logo and Company Name */}
+        <div className="flex items-center space-x-4 ml-4">
+         
+          {/* Company Name */}
+          <div className="text-2xl font-extrabold tracking-tight text-white">
+            <span className="text-white text-2xl font-serif">VEER </span>
+            <span className="text-white font-sans">OVERSEAS Pvt. Ltd.</span>
+          </div>
         </div>
       </nav>
     </div>

@@ -26,7 +26,7 @@ const AddItemModal = ({ onClose, onSubmit }) => {
 
       // Make a POST request to the API
       const response = await axios.post(
-        "https://veer-rice-backend.onrender.com/api/products/products",
+        "http://localhost:5000/api/products/products",
         items,
         {
           headers: {

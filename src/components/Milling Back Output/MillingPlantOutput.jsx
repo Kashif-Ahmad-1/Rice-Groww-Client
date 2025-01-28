@@ -53,95 +53,112 @@ export default function MillingPlantOutput() {
   // Calculate total qtyMt for all rows
   const totalQtyMt = rows.reduce((sum, row) => sum + row.qtyMt, 0)
 
-  return (
-    <div className="container mx-auto p-2 max-w-7xl">
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="bg-zinc-100 p-2 border-b">
-          <h2 className="text-sm font-bold">Milling Plant Back Output</h2>
+return (
+  <div className="container mx-auto p-4 max-w-7xl">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="bg-zinc-100 p-2 border-b">
+        <h2 className="text-sm font-bold">Milling Plant Back Output</h2>
+      </div>
+      <div className="p-6">
+        {/* Header Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+          <div className="flex items-center gap-4">
+            <span className="font-medium">Output Date -</span>
+            <span>10/01/2025</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="font-medium">Select Lot No</span>
+            <select
+              value={selectedLot}
+              onChange={(e) => setSelectedLot(e.target.value)}
+              className="border rounded-md p-2 w-full sm:w-auto"
+            >
+              {lotOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div className="p-6">
-          {/* Header Section */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div className="flex items-center gap-4">
-              <span className="font-medium">Output Date -</span>
-              <span>10/01/2025</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="font-medium">Select Lot No</span>
-              <select
-                value={selectedLot}
-                onChange={(e) => setSelectedLot(e.target.value)}
-                className="border rounded-md p-2"
-              >
-                {lotOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
 
-          {/* Main Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-[#B7D5A5]">
-                  <th className="border p-2 font-bold">Parameters</th>
-                  <th className="border p-2 font-bold">Bags Type</th>
-                  <th className="border p-2 font-bold">
-                    Bags PP 45/
-                    <br />
-                    Jute Bags
-                    <br />
-                    55 kg
-                  </th>
-                  <th className="border p-2 font-bold">Qty</th>
-                  <th className="border p-2 font-bold">Qty Mt</th>
+        {/* Main Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-[#B7D5A5]">
+                <th className="border p-2 font-bold">Parameters</th>
+                <th className="border p-2 font-bold">Bags Type</th>
+                <th className="border p-2 font-bold">
+                  Bags PP 45/
+                  <br />
+                  Jute Bags
+                  <br />
+                  55 kg
+                </th>
+                
+                <th className="border p-2 font-bold">Qty Mt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row.id}>
+                  <td className="border p-2">{row.parameter}</td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      value={row.bagsType}
+                      onChange={(e) =>
+                        handleInputChange(row.id, "bagsType", e.target.value)
+                      }
+                      className="w-full p-1 border rounded"
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      value={row.bagsPP}
+                      onChange={(e) =>
+                        handleInputChange(row.id, "bagsPP", e.target.value)
+                      }
+                      className="w-full p-1 border rounded"
+                    />
+                  </td>
+                  
+                  <td className="border p-2">{row.qtyMt.toFixed(1)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.id}>
-                    <td className="border p-2">{row.parameter}</td>
-                    <td className="border p-2">
-                      <input
-                        type="text"
-                        value={row.bagsType}
-                        onChange={(e) => handleInputChange(row.id, "bagsType", e.target.value)}
-                        className="w-full p-1 border rounded"
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        type="text"
-                        value={row.bagsPP}
-                        onChange={(e) => handleInputChange(row.id, "bagsPP", e.target.value)}
-                        className="w-full p-1 border rounded"
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        type="number"
-                        value={row.qty}
-                        onChange={(e) => handleInputChange(row.id, "qty", e.target.value)}
-                        className="w-full p-1 border rounded"
-                      />
-                    </td>
-                    <td className="border p-2">{row.qtyMt.toFixed(1)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-          {/* Total Output */}
-          <div className="flex justify-between items-center mt-6 pt-4 border-t">
-            <span className="text-lg font-bold text-red-600">Total Output</span>
-            <span className="text-lg font-bold text-red-600">{totalQtyMt.toFixed(1)}</span>
-          </div>
+        {/* Total Output */}
+        <div className="flex justify-between items-center mt-6 pt-4 border-t">
+          <span className="text-lg font-bold text-red-600">Total Output</span>
+          <span className="text-lg font-bold text-red-600">{totalQtyMt.toFixed(1)}</span>
         </div>
       </div>
     </div>
-  )
+
+    {/* Mobile Responsiveness Tweaks */}
+    <style jsx>{`
+      @media (max-width: 640px) {
+        .container {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        table {
+          font-size: 12px;
+        }
+
+        th,
+        td {
+          padding: 8px;
+        }
+      }
+    `}</style>
+  </div>
+);
+
 }

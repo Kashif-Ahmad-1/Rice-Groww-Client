@@ -8,7 +8,7 @@ import {
   FaListAlt,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
+import logo from './../images/logo.png';
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
   const [isOrdersOpen, setIsOrdersOpen] = useState(true);
@@ -34,14 +34,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     >
       {/* Sidebar Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
-        <div className="text-xl font-semibold text-indigo-900">SMART ITBOX</div> {/* Reduced text size */}
-        <button
-          className="text-gray-400 hover:text-yellow-400 transition duration-300 ease-in-out"
-          onClick={toggleSidebar}
-        >
-          <FaCaretDown size={24} />
-        </button>
-      </div>
+      {/* Logo */}
+      <img
+        src={logo} // Path to your logo
+        alt="Veer Overseas Logo"
+        className="h-18 w-18 object-contain max-w-[80%]" // Adjust size accordingly
+      />
+
+      {/* Button to Toggle Sidebar */}
+      <button
+        className="text-gray-400 hover:text-yellow-400 transition duration-300 ease-in-out"
+        onClick={toggleSidebar}
+      >
+        <FaCaretDown size={24} />
+      </button>
+    </div>
 
       {/* Sidebar Menu */}
       <nav className="mt-6">

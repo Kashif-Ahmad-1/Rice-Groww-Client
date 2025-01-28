@@ -22,7 +22,7 @@ const UsersTable = () => {
   const fetchUsers = async (token, setUsers, setLoading) => {
     setLoading(true);
     try {
-      const response = await axios.get("https://veer-rice-backend.onrender.com/api/users/users", {
+      const response = await axios.get("http://localhost:5000/api/users/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,7 +63,7 @@ const UsersTable = () => {
     if (result.isConfirmed) {
       try {
         setLoading(true);
-        await axios.delete(`https://veer-rice-backend.onrender.com/api/users/delete-user/${id}`, {
+        await axios.delete(`http://localhost:5000/api/users/delete-user/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
